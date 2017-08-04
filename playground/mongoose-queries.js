@@ -37,6 +37,9 @@ if(ObjectID.isValid(id)){
 
     console.log(JSON.stringify(user, undefined, 2));
   }
+  ,(e)=>{
+
+  }
   )
 }else{
   console.log(`${id} is not a valid id`);
