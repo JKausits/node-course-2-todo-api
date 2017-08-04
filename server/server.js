@@ -12,6 +12,8 @@ var app = express();
 // MIDDLEWARE
 app.use(bodyParser.json());
 
+// Todos API
+// POST /todos
 app.post('/todos',(req, res)=>{
   var todo = new Todo({
     text: req.body.text
@@ -24,6 +26,14 @@ app.post('/todos',(req, res)=>{
   });
 });
 
+// GET /todos
+app.get('/todos', (req, res)=>{
+  Todo.find().then((todos)=>{
+    res.send({todos});
+  }, (e)=>{
+    res.status(400).send(e);
+  });
+});
 
 app.get('/', (req, res)=>{
   res.send('Express Server');
