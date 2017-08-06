@@ -62,6 +62,30 @@ app.get('/todos/:id', (req, res)=>{
   }
 )
 
+// DELETE /todos/:id
+app.delete('/todos/:id', (req, res)=>{
+  var id = req.params.id;
+
+  // Verifies that the id is valid
+  if(!ObjectID.isValid(id)){
+    res.status(404).send(`${id} is not a valid Todo ID`);
+  }
+
+  // Find and remove by ID
+  Todo.findByIdAndRemove(id).then((todo)=>{
+    // Check to see if a Todo was found and removed
+    if(!todo){
+      res.status(404).send(`No user could be found with the ID: ${id}`);
+    }
+
+    // returns the removed Todo
+    res.send(todo);
+  },
+  (e)=>{
+    res.status(400);
+  });
+});
+
 app.get('/', (req, res)=>{
   res.send('Express Server');
   })
