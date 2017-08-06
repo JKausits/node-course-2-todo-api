@@ -7,9 +7,9 @@ const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {Todo} = require('./models/todo');
-//
-var app = express();
 
+var app = express();
+const port = process.env.PORT || 3000;
 // MIDDLEWARE
 app.use(bodyParser.json());
 
@@ -66,8 +66,8 @@ app.get('/', (req, res)=>{
   res.send('Express Server');
   })
 
-app.listen(3000,()=>{
-  console.log("Started on port 3000");
+app.listen(port,()=>{
+  console.log(`Started on port ${port}`);
 })
 
 module.exports = {app};
