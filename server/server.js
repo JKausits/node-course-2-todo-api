@@ -7,7 +7,7 @@ const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {Todo} = require('./models/todo');
-
+//
 var app = express();
 
 // MIDDLEWARE
@@ -35,6 +35,7 @@ app.get('/todos', (req, res)=>{
     res.status(400).send(e);
   });
 });
+
 // GET /todos/12341234
 app.get('/todos/:id', (req, res)=>{
   var id = req.params.id;
@@ -53,9 +54,10 @@ app.get('/todos/:id', (req, res)=>{
     // Return the todo object
     res.send({todo});
 
-  }).catch((e)=>{
+  }, (e)=>{
     res.status(400);
-  })
+  }
+  )
 
   }
 )
@@ -66,6 +68,6 @@ app.get('/', (req, res)=>{
 
 app.listen(3000,()=>{
   console.log("Started on port 3000");
-});
+})
 
 module.exports = {app};

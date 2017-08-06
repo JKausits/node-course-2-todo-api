@@ -1,20 +1,23 @@
 // Node Modules
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
 // Local Modules
-const {app} = require('./../server');
+const {app} = require('./../server.js');
 const {Todo} = require('./../models/todo');
 
-const todos = [{text: 'First test todo'}, {text: 'Second test tod'}];
-
+const todos = [{
+  _id: new ObjectID(),
+  text: 'First test todo'},
+  {_id: new ObjectID(),
+  text: 'Second test tod'}];
 
 beforeEach((done)=>{
   Todo.remove({}).then((done)=>{
     return Todo.insertMany(todos);
   }
 ).then(()=>done());
-
 });
 
 describe('POST /todos', ()=>{
@@ -64,7 +67,7 @@ describe('POST /todos', ()=>{
 });
 
 describe('GET /todos', ()=>{
-  it('should return an array of all the todo documents', ()=>{
+  it('should return an array of all the todo documents', (done)=>{
     request(app)
     .get('/todos')
     .expect(200)
@@ -76,10 +79,37 @@ describe('GET /todos', ()=>{
       Todo.find().then((todos)=>{
         expect(todos.length).toBe(2);
         done();
-      })
-      .catch((e)=>done(e));
+      }).catch((e)=>done(e));
     }
   );
   })
-
 });
+
+describe('GET /todos/:id', ()=>{
+  it('should return todo doc', (done)=>{
+    request(app)
+    .get(`/todos/${todos[0]._id.toHexString()}`)
+    .expect(200)
+    .expect((res)=>{
+      expect(res.body.todo.text).toBe(todos[0].text);
+    }
+    )
+    .end(done);
+  });
+
+  it('should return 404 if todo not found', (done)=>{
+    request(app)
+    .get(`/todos/${new ObjectID().toHexString()}`)
+    .expect(404)
+    .end(done);
+  });
+
+  it('should return 404 for non-object ids', (done)=>{
+    request(app)
+    .get('/todos/123')
+    .expect(404)
+    .end(done);
+
+  })
+}
+)
