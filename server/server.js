@@ -79,7 +79,7 @@ app.delete('/todos/:id', (req, res)=>{
     }
 
     // returns the removed Todo
-    res.send(todo);
+    res.send({todo});
   },
   (e)=>{
     res.status(400);
