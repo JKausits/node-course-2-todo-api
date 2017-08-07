@@ -33,6 +33,7 @@ var UserSchema = new mongoose.Schema({
   }]
 });
 
+// Instance Methods
 UserSchema.methods.toJSON = function(){
   var user = this;
   var userObject = user.toObject();
@@ -51,6 +52,15 @@ UserSchema.methods.generateAuthToken = function (){
   });
 };
 
+UserSchema.methods.removeToken = function(token){
+    var user = this;
+    return user.update({$pull: {
+        tokens: {
+          token
+        }
+    }
+  });
+}
 UserSchema.statics.findByToken = function(token){
   var User = this;
   var decoded;
