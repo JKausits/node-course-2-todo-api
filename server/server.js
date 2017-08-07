@@ -8,6 +8,7 @@ const _ = require('lodash');
 
 // Local Modules
 require('./config/config.js');
+var {authenticate} = require('./middleware/authenticate.js');
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {Todo} = require('./models/todo');
@@ -16,6 +17,7 @@ var app = express();
 const port = process.env.PORT;
 // MIDDLEWARE
 app.use(bodyParser.json());
+
 
 // Todos API
 // POST /todos
@@ -136,6 +138,11 @@ app.post('/users', (req, res)=>{
   });
 
 });
+
+// GET /users/me
+app.get('/users/me', authenticate, (req, res)=>{
+  res.send(req.user);
+})
 
 app.get('/', (req, res)=>{
   res.send('Express Server');
