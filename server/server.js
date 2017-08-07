@@ -5,13 +5,15 @@ const {ObjectID} = require('mongodb');
 const _ = require('lodash');
 
 
+
 // Local Modules
+require('./config/config.js');
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {Todo} = require('./models/todo');
 
 var app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 // MIDDLEWARE
 app.use(bodyParser.json());
 
