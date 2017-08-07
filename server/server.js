@@ -144,7 +144,7 @@ app.get('/users/me', authenticate, (req, res)=>{
   res.send(req.user).catch((e)=>{res.status(401)});
 })
 
-// POST /users/login {email, password}
+// POST /users/login 
 app.post('/users/login', (req, res)=>{
   var body = _.pick(req.body, ['email','password']);
   User.findByCredentials(body.email, body.password).then((user)=>{

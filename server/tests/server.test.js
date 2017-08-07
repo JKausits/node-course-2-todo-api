@@ -14,6 +14,7 @@ const {todos, populateTodos, users, populateUsers} = require('./seed/seed.js');
 beforeEach(populateTodos);
 beforeEach(populateUsers);
 
+// Todo API
 describe('POST /todos', ()=>{
   it('Should create a new todo', (done)=>{
     var text = "Test todo text";
@@ -176,6 +177,7 @@ describe('PATCH /todos/:id', ()=>{
 });
 
 
+// User API
 describe('GET /users/me', ()=>{
   it('should return user if authenticated', (done)=>{
     request(app).
@@ -240,6 +242,37 @@ describe('POST /users', ()=>{
     request(app)
     .post('/users')
     .send({email: users[0].email, password: "TestPassword"})
+    .expect(400)
+    .end(done);
+  })
+});
+
+describe('POST /users/login', ()=>{
+  it('should login user and return auth token', (done)=>{
+    request(app)
+    .post('/users/login')
+    .send({email: users[1].email, password: users[1].password})
+    .expect(200)
+    .expect((res)=>{
+      expect(res.headers['x-auth']).toExist();
+    })
+    .end((err, res)=>{
+      if(err){
+        done(err);
+      }
+
+      User.findById(users[1]._id).then((user)=>{
+        expect(user.tokens[0]).toInclude({'access': 'auth', token: res.headers['x-auth']});
+        done();
+      }).catch((e)=>done(e));
+    });
+
+  })
+
+  it('should reject invalid login', (done)=>{
+    request(app)
+    .post('/users/login')
+    .send({email: "testEmail@email.com", password: 'aaaaa'})
     .expect(400)
     .end(done);
   })
