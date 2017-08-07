@@ -120,6 +120,22 @@ app.patch('/todos/:id', (req, res)=>{
 
 });
 
+// User API
+//  POST /users
+app.post('/users', (req, res)=>{
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+  user.save().then(()=>{
+    return user.generateAuthToken();
+  })
+  .then((token)=>{
+    res.header('x-auth', token).status(201).send(user)
+  })
+  .catch( (e)=>{
+    res.status(400).send(e);
+  });
+
+});
 
 app.get('/', (req, res)=>{
   res.send('Express Server');
