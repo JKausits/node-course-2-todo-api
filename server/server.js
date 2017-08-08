@@ -61,7 +61,7 @@ app.get('/todos/:id', (req, res)=>{
     res.send({todo});
 
   }, (e)=>{
-    res.status(400);
+    res.status(400).send();
   }
   )
 
@@ -152,7 +152,7 @@ app.post('/users/login', (req, res)=>{
       res.header('x-auth', token).send(user);
     });
   }).catch((e)=>{
-    res.send(400).send();
+    res.status(400).send();
   });
 
 
